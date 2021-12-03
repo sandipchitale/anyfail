@@ -1,0 +1,15 @@
+ext {
+    __anyFailed = false;
+    __failures = [];
+    __allowFail = [];
+}
+
+gradle.taskGraph.afterTask { Task task, TaskState state ->
+    if (project.ext.__allowFail.contains(task.name)) {
+        if (task.state.failure != null) {
+            project.ext.__anyFailed = true;
+            project.ext.__failures.push(task.state.failure);
+            task.state.failure = null;
+        }
+    }
+}
